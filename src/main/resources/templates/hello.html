@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面</title>
+</head>
+<body>
+    <h1>这是我的第一个thymeleaf页面</h1>
+    <h1 th:text="${username}"></h1>
+    <h1 th:text="${session.password}"></h1>
+    <table border="1px" th:if="${not#lists.isEmpty(deptList)}">
+        <tr>
+            <td>部门id</td>
+            <td>部门名称</td>
+            <td>部门序号</td>
+            <td>部门状态</td>
+        </tr>
+        <tr th:each="dept:${deptList}">
+            <td th:text="${dept.deptId}"></td>
+            <td th:text="${dept.deptName}"></td>
+            <td th:text="${dept.orderNum}"></td>
+            <td th:text="${dept.status}"></td>
+        </tr>
+    </table>
+<button  onclick="deleteDept()">点击我</button>
+</body>
+<script th:inline="javaScript">
+    function deleteDept(){
+        var deptid=[[${deptid}]];
+        alert(deptid);
+    }
+</script>
+</html>

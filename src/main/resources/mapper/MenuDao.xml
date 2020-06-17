@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.dao.MenuDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.aaa.entity.Menu">
+        <id column="menu_id" property="menuId" />
+        <result column="menu_name" property="menuName" />
+        <result column="parent_id" property="parentId" />
+        <result column="order_num" property="orderNum" />
+        <result column="url" property="url" />
+        <result column="menu_type" property="menuType" />
+        <result column="visible" property="visible" />
+        <result column="perms" property="perms" />
+        <result column="icon" property="icon" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        menu_id AS menuId, menu_name AS menuName, parent_id AS parentId, order_num AS orderNum, url, menu_type AS menuType, visible, perms, icon, create_by AS createBy, create_time AS createTime, update_by AS updateBy, update_time AS updateTime, remark
+    </sql>
+    <!--使用resultType的场景是数据库列名和实体类属性名完全一致，如果不一致，需要自己定义resultmap-->
+    <select id="findMenusByLoginName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+        DISTINCT m.*
+FROM
+	tbl_menu m
+	INNER JOIN tbl_role_menu rm ON m.menu_id = rm.menu_id
+WHERE
+	rm.role_id IN (
+	SELECT
+		ur.role_id
+	FROM
+		tbl_user u
+		INNER JOIN tbl_user_role ur ON u.user_id = ur.user_id
+        <trim prefix="WHERE" prefixOverrides="AND |OR |and |or ">
+            <if test="loginName != null ">
+                AND u.login_name = #{loginName}
+            </if>
+        </trim>
+	 )
+    </select>
+
+</mapper>

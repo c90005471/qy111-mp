@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>显示权限树页面</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <script th:src="@{/layui/layui.js}"></script>
+</head>
+<body>
+    <h1>显示权限树</h1>
+    <div class="layui-btn-container">
+        <button type="button" class="layui-btn layui-btn-sm" lay-demo="getChecked">获取选中节点数据</button>
+        <button type="button" class="layui-btn layui-btn-sm" lay-demo="setChecked">勾选指定节点</button>
+        <button type="button" class="layui-btn layui-btn-sm" lay-demo="reload">重载实例</button>
+    </div>
+
+    <div id="test12" class="demo-tree-more"></div>
+</body>
+<script>
+    layui.use(['tree', 'util','jquery'], function() {
+        var $ = layui.jquery;
+       var  tree=layui.tree;
+        $.ajax({
+            url: '/menu/findAllMenus',
+            dataType: 'json',
+            contentType: "application/json;charset=UTF-8",
+            type: 'GET',
+            success: function (result) {
+                //基本演示
+                tree.render({
+                    elem: '#test12'
+                    , data: result
+                    , showCheckbox: true  //是否显示复选框
+                    , id: 'demoId1'
+                    , isJump: true //是否允许点击节点时弹出新窗口跳转
+                    , click: function (obj) {
+                        var data = obj.data;  //获取当前点击的节点数据
+                        layer.msg('状态：' + obj.state + '<br>节点数据：' + JSON.stringify(data));
+                    }
+                });
+            }
+        })
+
+
+    });
+</script>
+</html>
