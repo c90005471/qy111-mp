@@ -14,6 +14,6 @@ import java.lang.annotation.*;
 //注解在运行的时候生效
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SaveOrUpdateEntityAnn {
-    //类的全限定名称
-    String typeName() ;
+    //实体类的类型
+    Class<?> entityClass();
 }

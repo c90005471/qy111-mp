@@ -1,7 +1,10 @@
 package com.aaa.service;
 
 import com.aaa.entity.User;
+import com.aaa.entity.UserVo;
 import com.baomidou.mybatisplus.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,7 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2020-06-09
  */
 public interface UserService extends IService<User> {
+
+    List<UserVo> selectUserVoList();
 
 }

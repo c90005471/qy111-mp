@@ -1,6 +1,6 @@
 package com.aaa.shiro;
 
-import com.aaa.util.AAAConstants;
+import com.aaa.util.MyConstants;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.util.DigestUtils;
 
@@ -26,8 +26,8 @@ public class ShiroUtil {
      */
     public static String  encryptionBySalt(String salt,String message){
         //String algorithmName 加密算法, Object source 明文, Object salt 盐值, int hashIterations 加密次数
-        String algorithmName= AAAConstants.ALGORITHM_NAME;
-        int hashIterations=AAAConstants.HASH_ITERATIONS;
+        String algorithmName= MyConstants.ALGORITHM_NAME;
+        int hashIterations=MyConstants.HASH_ITERATIONS;
         SimpleHash simpleHash=new SimpleHash(algorithmName,message,salt,hashIterations);
         return simpleHash.toString();
     }

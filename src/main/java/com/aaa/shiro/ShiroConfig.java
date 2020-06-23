@@ -1,7 +1,7 @@
 package com.aaa.shiro;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
-import com.aaa.util.AAAConstants;
+import com.aaa.util.MyConstants;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -85,9 +85,9 @@ public class ShiroConfig {
     public CredentialsMatcher credentialsMatcher(){
         HashedCredentialsMatcher credentialsMatcher= new HashedCredentialsMatcher();
         //使用md5加密
-        credentialsMatcher.setHashAlgorithmName(AAAConstants.ALGORITHM_NAME);
+        credentialsMatcher.setHashAlgorithmName(MyConstants.ALGORITHM_NAME);
         //加密1000次
-        credentialsMatcher.setHashIterations(AAAConstants.HASH_ITERATIONS);
+        credentialsMatcher.setHashIterations(MyConstants.HASH_ITERATIONS);
         return credentialsMatcher;
     }
     /**

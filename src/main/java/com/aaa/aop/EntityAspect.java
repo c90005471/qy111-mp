@@ -1,7 +1,9 @@
 package com.aaa.aop;
 
-import com.aaa.util.AAAConstants;
+import com.aaa.entity.User;
+import com.aaa.util.MyConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.shiro.SecurityUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -26,7 +28,7 @@ public class EntityAspect {
     @Around("pointCutSaveOrUpdate()")
     /**
      * create by: Teacher陈
-     * description: 通过环绕方法将controller中的保存和修改方法统一
+     * description: 通过AOP环绕方法将controller中的保存和修改方法统一
      * 加上时间和人
      * create time: 2020/6/17 10:
      *
@@ -44,24 +46,34 @@ public class EntityAspect {
         //获取注解
         SaveOrUpdateEntityAnn annotation = method.getAnnotation(SaveOrUpdateEntityAnn.class);
         //获取注解的值
-        String typeName = annotation.typeName();
-        //根据类名反射实例化对象
-        Class<?> aClass = Class.forName(typeName);
+        Class<?> entityClass = annotation.entityClass();
+        //遍历所有的参数，并修改参数的内容
         for (int i = 0; i <joinPointArgs.length ; i++) {
-            Object fromValue=joinPointArgs[i];
+            Object fromObject=joinPointArgs[i];
+            //通过jackson工具转换对象
             ObjectMapper objectMapper = new ObjectMapper();
-            Object o = objectMapper.convertValue(fromValue, aClass);
+            //将原始对象，通过jakson工具转换成具体的实体对象
+            Object toObject = objectMapper.convertValue(fromObject, entityClass);
+            //获取当前登录的用户
+            User user = (User) SecurityUtils.getSubject().getPrincipal();
+            String loginName = user.getLoginName();
+            //如果是保存方法，自动匹配创建人和创建时间
+            if(methodName.contains(MyConstants.SAVE_OPERATION)){
+                Method setCreateTime = entityClass.getMethod("setCreateTime", Date.class);
+                setCreateTime.invoke(toObject,new Date());
+                Method setCreateBy = entityClass.getMethod("setCreateBy",String.class);
+                setCreateBy.invoke(toObject,loginName);
 
-            if(methodName.contains(AAAConstants.SAVE_OPERATION)){
-                Method setCreateTime = aClass.getMethod("setCreateTime", Date.class);
-                setCreateTime.invoke(o,new Date());
             }
-            if(methodName.contains(AAAConstants.UPDATE_OPERATION)){
-                Method setUpdateTime = aClass.getMethod("updateTime", Date.class);
-                setUpdateTime.invoke(o,new Date());
+            //如果是修改方法，自动匹配修改人和修改时间
+            if(methodName.contains(MyConstants.UPDATE_OPERATION)){
+                Method setUpdateTime = entityClass.getMethod("setUpdateTime", Date.class);
+                setUpdateTime.invoke(toObject,new Date());
+                Method setUpdateBy = entityClass.getMethod("setUpdateBy",String.class);
+                setUpdateBy.invoke(toObject,loginName);
             }
-            System.out.println(o.toString());
-            joinPointArgs[i]=o;
+            //将参数修改完之后，再重新设置回去
+            joinPointArgs[i]=toObject;
         }
         Object proceed = joinPoint.proceed(joinPointArgs);
         return proceed;

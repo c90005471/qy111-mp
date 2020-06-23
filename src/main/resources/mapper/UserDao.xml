@@ -22,10 +22,36 @@
         <result column="update_time" property="updateTime" />
         <result column="remark" property="remark" />
     </resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="UserDeptResultMap" type="com.aaa.entity.UserVo">
+        <id column="user_id" property="userId" />
+        <result column="dept_id" property="deptId" />
+        <result column="login_name" property="loginName" />
+        <result column="user_name" property="userName" />
+        <result column="email" property="email" />
+        <result column="phonenumber" property="phonenumber" />
+        <result column="sex" property="sex" />
+        <result column="avatar" property="avatar" />
+        <result column="password" property="password" />
+        <result column="salt" property="salt" />
+        <result column="status" property="status" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="remark" property="remark" />
+        <association property="dept" column="dept_id" javaType="com.aaa.entity.Dept">
+            <result column="dept_name" property="deptName"></result>
+        </association>
+    </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         user_id AS userId, dept_id AS deptId, login_name AS loginName, user_name AS userName, email, phonenumber, sex, avatar, password, salt, status, del_flag AS delFlag, create_by AS createBy, create_time AS createTime, update_by AS updateBy, update_time AS updateTime, remark
     </sql>
+    <select id="selectUserVoList" resultMap="UserDeptResultMap">
+          select u.*,d.dept_name from tbl_user u INNER JOIN tbl_dept d on u.dept_id=d.dept_id
+    </select>
 
 </mapper>
