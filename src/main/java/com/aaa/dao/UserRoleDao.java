@@ -2,6 +2,8 @@ package com.aaa.dao;
 
 import com.aaa.entity.UserRole;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 /**
  * <p>
@@ -11,6 +13,8 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @author AAATeacherChen
  * @since 2020-06-09
  */
+@Mapper
+@Repository
 public interface UserRoleDao extends BaseMapper<UserRole> {
 
 }
