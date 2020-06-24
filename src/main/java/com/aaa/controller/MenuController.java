@@ -1,8 +1,11 @@
 package com.aaa.controller;
 
 
+import com.aaa.entity.LayUiTable;
 import com.aaa.entity.LayUiTree;
+import com.aaa.entity.Menu;
 import com.aaa.service.MenuService;
+import com.aaa.util.MyConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -40,6 +43,31 @@ public class MenuController {
     public List<LayUiTree> findAllMenus(){
         List<LayUiTree> layUiTreeList = menuService.findMenus(null);
         return layUiTreeList;
+    }
+
+    /**
+     * create by: Teacher陈
+     * description: 跳转到显示菜单管理页面
+     * create time: 2020/6/24 15:50
+     *
+     * @return a
+     * @Param: null
+    */
+    @RequestMapping("/toShowMenu")
+    public String toShowMenu(){
+        return "menu/showMenu";
+    }
+
+    @RequestMapping("/findAllMenusTreeTable")
+    @ResponseBody
+    public LayUiTable findAllMenusTreeTable(){
+        List<Menu> menuList = menuService.selectList(null);
+        LayUiTable table = new LayUiTable();
+        table.setCode(MyConstants.OPERATION_SUCCESS_CODE);
+        table.setMsg(MyConstants.OPERATION_SUCCESS_MESSAGE);
+        table.setData(menuList);
+        table.setCount(menuList.size());
+        return table;
     }
 }
 

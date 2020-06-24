@@ -31,7 +31,7 @@
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree"  lay-filter="test">
                 <li th:each="menu:${menus}" class="layui-nav-item layui-nav-itemed">
-                    <a class="" th:text="${menu.title}" href="javascript:;" ></a>
+                      <a  class="" th:text="${menu.title}" href="javascript:;" ></a>
                     <dl class="layui-nav-child" th:each="child : ${menu.children}">
                         <dd><a th:href="${child.url}" th:text="${child.title}"></a></dd>
                     </dl>
