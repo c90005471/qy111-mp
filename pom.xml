@@ -63,12 +63,12 @@
         <!--使用mybatisplus代码生成器-->
         <dependency>
             <artifactId>velocity</artifactId>
-          <!--  <exclusions>
+            <exclusions>
                 <exclusion>
                     <artifactId>commons-collections</artifactId>
                     <groupId>commons-collections</groupId>
                 </exclusion>
-            </exclusions>-->
+            </exclusions>
             <groupId>org.apache.velocity</groupId>
             <version>1.7</version>
         </dependency>

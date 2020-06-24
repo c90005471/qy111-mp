@@ -9,6 +9,7 @@ import com.aaa.service.UserService;
 import com.aaa.util.MyConstants;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
@@ -19,7 +20,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.websocket.server.PathParam;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -43,6 +46,7 @@ public class UserController  extends  BaseController{
     public String toShowUser(Model model){
         //查询所有的部门信息，填充到页面下拉框中
         List<Dept> deptList = deptService.selectList(null);
+        //查询所有的角色信息，填充到页面下拉框中
         List<Role> roleList = roleService.selectList(null);
         model.addAttribute("deptList", deptList);
         model.addAttribute("roleList", roleList);
@@ -58,15 +62,42 @@ public class UserController  extends  BaseController{
      */
     @RequestMapping("/selectAllUser")
     @ResponseBody
-    public LayUiTable selectAllUser(){
+    public LayUiTable selectAllUser(Integer page, Integer limit, String searchLoginName, String searchUserName, String searchPhonenumber){
+        LayUiTable table = new LayUiTable();
+        //多条件查询所需要的集合
+        Map<String ,Object> condition= new HashMap(16);
 
-        LayUiTable layUiTable = new LayUiTable();
-        List<UserVo> userVoList = userService.selectUserVoList();
-        layUiTable.setCode(0);
-        layUiTable.setCount(userVoList.size());
-        layUiTable.setData(userVoList);
-        layUiTable.setMsg("操作成功");
-        return layUiTable;
+        Wrapper wrapper = new EntityWrapper();
+        //添加模糊查询的条件
+        if (null != searchLoginName && !"".equals(searchLoginName)) {
+            wrapper.like("login_name", searchLoginName);
+            condition.put("login_name", searchLoginName);
+        }
+        if (null != searchUserName && !"".equals(searchUserName)) {
+            condition.put("user_name", searchUserName);
+        }
+        if (null != searchPhonenumber && !"".equals(searchPhonenumber)) {
+            condition.put("phonenumber", searchPhonenumber);
+        }
+        wrapper.eq("del_flag", 0);
+        condition.put("del_flag", 0);
+        int userListCount = userService.selectCount(wrapper);
+        //如果表中没有数据。则不进行分页查询
+        if(userListCount>0){
+            Page<UserVo> pageInfo = new Page(page, limit);
+            List<UserVo> userVoList = userService.selectUserVoList(pageInfo,condition);
+            //从分页结果中提取list集合
+            table.setCode(MyConstants.OPERATION_SUCCESS_CODE);
+            table.setMsg(MyConstants.OPERATION_SUCCESS_MESSAGE);
+            table.setData(userVoList);
+            table.setCount(userListCount);
+            return table;
+        }else
+        {
+
+            return table;
+        }
+
     }
 
 

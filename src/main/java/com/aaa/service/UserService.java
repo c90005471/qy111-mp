@@ -2,9 +2,12 @@ package com.aaa.service;
 
 import com.aaa.entity.User;
 import com.aaa.entity.UserVo;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -16,7 +19,7 @@ import java.util.List;
  */
 public interface UserService extends IService<User> {
 
-    List<UserVo> selectUserVoList();
+    List<UserVo> selectUserVoList( Page<UserVo> pageInfo, Map<String ,Object> condition);
     boolean saveUserAndSalt(User user);
 
 }
