@@ -1,16 +1,19 @@
 package com.aaa.shiro;
 
 import com.aaa.entity.User;
+import com.aaa.service.MenuService;
 import com.aaa.service.UserService;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -26,6 +29,8 @@ public class MyRealm  extends AuthorizingRealm {
     private UserBiz userBizImpl;
     @Autowired
     private MenuBiz menuBiz;*/
+   @Autowired
+   private MenuService menuService;
     /**
      * 市容安全框架的授权
      * @param principals
@@ -34,15 +39,12 @@ public class MyRealm  extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         System.out.println("授权开始");
-      /*  User user = (User)  principals.getPrimaryPrincipal();
-        // 菜单列表
-        Set<String> perms = menuBiz.selectAllPermsByName(user.getLoginName());
-        System.out.println(perms.toString());
+        User user = (User)  principals.getPrimaryPrincipal();
         //将权限字符串添加到授权对象中
+        Set<String> allPermsByLoginName = menuService.findAllMenusByLoginName(user.getLoginName());
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        info.addStringPermissions(perms);
-        return info;*/
-      return null;
+        info.setStringPermissions(allPermsByLoginName);
+        return info;
     }
     /**
      * shiro安全框架的认证,

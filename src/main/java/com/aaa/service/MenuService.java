@@ -5,6 +5,7 @@ import com.aaa.entity.Menu;
 import com.baomidou.mybatisplus.service.IService;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -17,5 +18,6 @@ import java.util.List;
 public interface MenuService extends IService<Menu> {
 
      List<LayUiTree> findMenus(String loginName);
+     Set<String> findAllMenusByLoginName(String loginName);
 
 }
